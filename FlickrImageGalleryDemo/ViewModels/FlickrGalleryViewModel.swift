@@ -7,10 +7,8 @@
 
 import Foundation
 
-
 class FlickrGalleryViewModel {
     private var photos: [FlickrPhoto] = []
-    private var currentPage = 1
     var isLoading = false
     
     var numberOfPhotos: Int {
@@ -21,16 +19,16 @@ class FlickrGalleryViewModel {
         guard !isLoading else { return }
         
         isLoading = true
-        NetworkManager.shared.fetchPhotos(page: currentPage) { [weak self] result in
+        NetworkManager.shared.fetchPhotos { [weak self] result in
             guard let self = self else { return }
             
             defer { self.isLoading = false }
             
             switch result {
             case .success(let fetchedPhotos):
-                self.photos.append(contentsOf: fetchedPhotos)
-                self.currentPage += 1
-                completion(true)
+                let uniquePhotos = fetchedPhotos.filter { !self.photos.contains($0) }
+                self.photos.append(contentsOf: uniquePhotos)
+                completion(!uniquePhotos.isEmpty)
             case .failure(let error):
                 print("Error fetching photos: \(error)")
                 completion(false)

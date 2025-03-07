@@ -37,7 +37,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="collectionView" destination="FEg-CP-lvY" id="x7U-ui-xZh"/>
+                        <outlet property="collectionView" destination="FEg-CP-lvY" id="dOT-wj-3Zg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

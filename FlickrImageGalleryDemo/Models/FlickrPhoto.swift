@@ -7,21 +7,21 @@
 
 import Foundation
 
+
 struct FlickrPhoto: Codable, Hashable {
-    let id: String
-    let farm: Int
-    let server: String
-    let secret: String
+    let title: String
+    let link: String
+    let media: Media
     
     var imageURL: URL? {
-        return URL(string: "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_m.jpg")
+        return URL(string: media.m)
     }
 }
 
-struct FlickrResponse: Codable {
-    let photos: FlickrPhotoContainer
+struct Media: Codable, Hashable {
+    let m: String
 }
 
-struct FlickrPhotoContainer: Codable {
-    let photo: [FlickrPhoto]
+struct FlickrResponse: Codable {
+    let items: [FlickrPhoto]
 }

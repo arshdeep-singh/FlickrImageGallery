@@ -7,30 +7,17 @@
 
 import Foundation
 
+
+
 class NetworkManager {
     static let shared = NetworkManager()
-    private let apiKey = "YOUR_FLICKR_API_KEY" // Replace with your actual Flickr API key
-    private let baseURL = "https://api.flickr.com/services/rest/"
+    private let publicFeedURL = "https://www.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1"
     
     private init() {}
     
-    func fetchPhotos(page: Int = 1, completion: @escaping (Result<[FlickrPhoto], Error>) -> Void) {
-        guard var urlComponents = URLComponents(string: baseURL) else {
+    func fetchPhotos(completion: @escaping (Result<[FlickrPhoto], Error>) -> Void) {
+        guard let url = URL(string: publicFeedURL) else {
             completion(.failure(NSError(domain: "Invalid URL", code: -1)))
-            return
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "method", value: "flickr.photos.getRecent"),
-            URLQueryItem(name: "api_key", value: apiKey),
-            URLQueryItem(name: "format", value: "json"),
-            URLQueryItem(name: "nojsoncallback", value: "1"),
-            URLQueryItem(name: "page", value: "\(page)"),
-            URLQueryItem(name: "per_page", value: "50")
-        ]
-        
-        guard let url = urlComponents.url else {
-            completion(.failure(NSError(domain: "URL Construction Failed", code: -2)))
             return
         }
         
@@ -41,14 +28,14 @@ class NetworkManager {
             }
             
             guard let data = data else {
-                completion(.failure(NSError(domain: "No Data Received", code: -3)))
+                completion(.failure(NSError(domain: "No Data Received", code: -2)))
                 return
             }
             
             do {
                 let decoder = JSONDecoder()
                 let flickrResponse = try decoder.decode(FlickrResponse.self, from: data)
-                completion(.success(flickrResponse.photos.photo))
+                completion(.success(flickrResponse.items))
             } catch {
                 completion(.failure(error))
             }

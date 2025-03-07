@@ -11,8 +11,8 @@ class FlickrPhotoCollectionCell: UICollectionViewCell  {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    static let reuseIdentifier = "FlickrPhotoCell"
-    static let nibName = "FlickrPhotoCollectionViewCell"
+    static let reuseIdentifier = "FlickrPhotoCollectionCell"
+    static let nibName = "FlickrPhotoCollectionCell"
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -4,17 +4,11 @@
 //
 //  Created by Arshdeep Singh on 05/03/25.
 //
-
 import UIKit
 
 class FlickrGalleryController: UIViewController {
     
-    @IBOutlet weak var collectionView: UICollectionView!{
-        didSet{
-            collectionView.dataSource = self
-            collectionView.delegate =  self
-        }
-    }
+    @IBOutlet weak var collectionView: UICollectionView!
     
     private let viewModel = FlickrGalleryViewModel()
     private let refreshControl = UIRefreshControl()
@@ -26,11 +20,12 @@ class FlickrGalleryController: UIViewController {
     }
     
     private func setupCollectionView() {
-        // Register cell from XIB
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
         let nib = UINib(nibName: FlickrPhotoCollectionCell.nibName, bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: FlickrPhotoCollectionCell.reuseIdentifier)
         
-        // Configure collection view layout
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             let width = (view.frame.width - 20) / 3
             layout.itemSize = CGSize(width: width, height: width)
@@ -38,7 +33,6 @@ class FlickrGalleryController: UIViewController {
             layout.minimumLineSpacing = 10
         }
         
-        // Add refresh control
         refreshControl.addTarget(self, action: #selector(refreshPhotos), for: .valueChanged)
         collectionView.refreshControl = refreshControl
     }
@@ -85,7 +79,6 @@ extension FlickrGalleryController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension FlickrGalleryController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        // Pagination: Load more photos when approaching the end
         if indexPath.item == viewModel.numberOfPhotos - 5 && !viewModel.isLoading {
             viewModel.fetchPhotos { [weak self] success in
                 DispatchQueue.main.async {
